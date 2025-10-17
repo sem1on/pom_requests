@@ -14,3 +14,6 @@ class CreateObject:
 
     def chek_name(self, name):
         assert self.response_json["name"] == name
+
+    def check_status_code_200(self):
+        assert self.response.status_code == 200
