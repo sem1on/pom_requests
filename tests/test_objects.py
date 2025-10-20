@@ -2,7 +2,9 @@ import requests
 import pytest
 
 from endpoints.create_objrct import CreateObject
-
+from endpoints.get_jbject import GetObject
+from endpoints.update_object import UpdateObject
+from endpoints.delet_object import DeletObject
 
 @pytest.fixture()
 def create_object_id():
@@ -42,11 +44,13 @@ def test_create_obj():
 
 
 def test_get_object(create_object_id):
-    response = requests.get(f"https://api.restful-api.dev/objects/{create_object_id}").json()
-    assert create_object_id == response["id"]
+    get_object_by_id = GetObject()
+    get_object_by_id.get_object(create_object_id)
+    get_object_by_id.check_idcreate_object_id()
 
 
 def test_update_object(create_object_id):
+    update_object = UpdateObject()
     payload = {
             "name": "Apple MacBook Pro 21",
             "data": {
@@ -56,20 +60,15 @@ def test_update_object(create_object_id):
                 "Hard disk size": "1 TB"
                 }
             }
-    response = requests.patch(
-        url=f"https://api.restful-api.dev/objects/{create_object_id}",
-        json=payload
-    )
-    assert payload["name"] == response.json()["name"]
+    update_object.update_object(create_object_id, payload)
+    update_object.chek_name(payload["name"])
 
 
 def test_delete_object(create_object_id):
-    response = requests.delete(
-        url=f"https://api.restful-api.dev/objects/{create_object_id}"
-    )
-    assert response.status_code == 200
-    response = requests.get(f"https://api.restful-api.dev/objects/{create_object_id}")
-    assert response.status_code == 404
+    delet_object_endpoint = DeletObject()
+    delet_object_endpoint.delete_object(create_object_id)
+    delet_object_endpoint.check_status_code_200()
+    delet_object_endpoint.chek_delete_object(create_object_id)
 
 
 
