@@ -1,6 +1,8 @@
 import requests
 import pytest
 
+from endpoints.create_objrct import CreateObject
+
 
 @pytest.fixture()
 def create_object_id():
@@ -23,6 +25,7 @@ def create_object_id():
 
 
 def test_create_obj(): 
+    new_object_endpiont = CreateObject()
     payload = {
             "name": "Apple MacBook Pro 16",
             "data": {
@@ -32,11 +35,9 @@ def test_create_obj():
                 "Hard disk size": "1 TB"
                 }
             }
-    response = requests.post(
-        url="https://api.restful-api.dev/objects",
-        json=payload
-    )
-    assert response.json()["name"] == payload["name"]
+    new_object_endpiont.new_object(payload=payload)
+    new_object_endpiont.check_status_code_200()
+    new_object_endpiont.chek_name(payload["name"])
 
 
 
